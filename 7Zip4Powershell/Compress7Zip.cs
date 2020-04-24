@@ -213,19 +213,9 @@ namespace SevenZip4PowerShell {
                         throw new ArgumentException("Only one directory allowed as input");
                     }
                     var recursion = !_cmdlet.DisableRecursion.IsPresent;
-                    if (_cmdlet.Filter != null) {
-                        if (HasPassword) {
-                            compressor.CompressDirectory(directoryOrFiles[0], archiveFileName, _cmdlet._password, _cmdlet.Filter, recursion);
-                        } else {
-                            compressor.CompressDirectory(directoryOrFiles[0], archiveFileName, _cmdlet.Filter, recursion);
-                        }
-                    } else {
-                        if (HasPassword) {
-                            compressor.CompressDirectory(directoryOrFiles[0], archiveFileName, recursion, _cmdlet._password);
-                        } else {
-                            compressor.CompressDirectory(directoryOrFiles[0], archiveFileName, recursion);
-                        }
-                    }
+                    var filter = (_cmdlet.Filter != null) ? _cmdlet.Filter : "*";
+                    var password = HasPassword ? _cmdlet.Password : "";
+                    compressor.CompressDirectory(directoryOrFiles[0], archiveFileName, password, filter, recursion);
                 }
 
                 WriteProgress(new ProgressRecord(0, activity, "Finished") { RecordType = ProgressRecordType.Completed });
